@@ -1,145 +1,140 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Webapp</title>
-<style>
-    body{
-        background-image:url('https://images.alphacoders.com/111/1115468.jpg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no repeat;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .choose{
-        background:white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        width: 350px;
-        text-align: left;
-    }
-    .add-btn{
-        width: 100%;
-        padding: 10px;
-        background-color: skyblue;
-        color:aliceblue;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        margin-top: 15px;
-        cursor: pointer;
-    }
-    .add-btn:hover{
-        background-color: blue;
-    }
-    label{
-        font-weight: bold;
-        display: block;
-        margin-top: 10px;
-    }
-    #movie-list{
-        margin-top: 20px;
-        padding: 0;
-        list-style-type: none;
-    }
-    #movie-list li{
-        padding: 8px;
-        margin: 5px;
-        background-color: lightblue;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-    #movie-list li:hover{
-        background-color: cyan;  
-    }
-    #clear-btn{
-        margin-top: 15px;
-        padding: 10px;
-        background-color: dodgerblue;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webapp</title>
+    <style>
+        body {
+            background-image: url('https://images.alphacoders.com/111/1115468.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .choose {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: left;
+        }
+        .add-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: skyblue;
+            color: aliceblue;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background-color: blue;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        #movie-list {
+            margin-top: 20px;
+            padding: 0;
+            list-style-type: none;
+        }
+        #movie-list li {
+            padding: 8px;
+            margin: 5px;
+            background-color: lightblue;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #movie-list li:hover {
+            background-color: cyan;
+        }
+        #clear-btn {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: dodgerblue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #clear-btn:hover {
+            background-color: red;
+        }
+        #movie-count {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="choose">
+        <label for="movie">Enter Movie Name:</label>
+        <input type="text" id="movie" name="movie" required>
+        <button class="add-btn" id="add-movie-btn">Add a movie</button>
+        <ul id="movie-list"></ul>
+        <div id="movie-count">Total Movies: 0</div>
+        <button id="clear-btn">Clear List</button>
+    </div>
 
-    }
-    #clear-btn:hover{
-        background-color: red;
-    }
-    #movie-count{
-        margin-top: 15px;
-        font-weight: bold;
-    }
+    <script>
+        window.onload = function () {
+            let movies = [];
+            const movieInput = document.getElementById('movie');
+            const addMovieBtn = document.getElementById('add-movie-btn');
+            const movieList = document.getElementById('movie-list');
+            const movieCount = document.getElementById('movie-count');
+            const clearBtn = document.getElementById('clear-btn');
 
- 
+            addMovieBtn.addEventListener('click', function () {
+                const movieName = movieInput.value.trim();
+                if (movieName === "") {
+                    alert("Please enter a movie name");
+                    return;
+                }
+                movies.push(movieName);
+                updateMovieList();
+                movieInput.value = "";
+            });
 
-</style>
+            movieInput.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    addMovieBtn.click();
+                }
+            });
 
-<script>
-   let movies = [];
-const movieInput = document.getElementById('movie');
-const addMovieBtn = document.getElementById('add-movie-btn');
-const movieList = document.getElementById('movie-list');
-const movieCount = document.getElementById('movie-count');
-const clearBtn = document.getElementById('clear-btn');
+            function updateMovieList() {
+                movieList.innerHTML = "";
+                movies.forEach((movie, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = movie;
+                    li.addEventListener('click', () => removeMovie(index));
+                    movieList.appendChild(li);
+                });
+                movieCount.textContent = `Total Movies: ${movies.length}`;
+            }
 
-addMovieBtn.addEventListener('click', function() {
-    const movieName = movieInput.value.trim();
-    if (movieName === "") {
-        alert("Please enter a movie name");
-        return;
-    }
-    movies.push(movieName);
-    updateMovieList();
-    movieInput.value = "";
-});
+            function removeMovie(index) {
+                movies.splice(index, 1);
+                updateMovieList();
+            }
 
-movieInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        addMovieBtn.click();
-    }
-});
-
-function updateMovieList() {
-    movieList.innerHTML = "";
-    movies.forEach((movie, index) => {
-        const li = document.createElement("li");
-        li.textContent = movie;
-        li.addEventListener('click', () => removeMovie(index));
-        movieList.appendChild(li);
-    });
-    movieCount.textContent = `Total Movies: ${movies.length}`;
-}
-
-function removeMovie(index) {
-    movies.splice(index, 1);
-    updateMovieList();
-}
-
-clearBtn.addEventListener('click', function() {
-    movies = [];
-    updateMovieList();
-});
-
-
-
-</script>
-    </head>
-       <body>
-      <div class="choose">
-      <button class="add-btn" id="add-movie-btn">Add a movie</button>
-      <label for="movie">Enter</label>
-      <input type="text" id="movie" name="movie" required>
-      <ul id="movie-list"></ul>
-      <div id="movie-count">Total Movies:0</div>
-      <button id="clear-btn">Clear List</button>
-       </div>
-    </body>
+            clearBtn.addEventListener('click', function () {
+                movies = [];
+                updateMovieList();
+            });
+        };
+    </script>
+</body>
 </html>
